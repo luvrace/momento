@@ -7,6 +7,39 @@ const TODOS_LS = "toDos";
 let toDos = [];
 
 
+
+function updateToDo(event){
+    const btn = event.target;
+    const li = btn.parentNode;
+
+    if(btn.innerText==="수정"){
+        btn.innerText="확인";
+        const span = li.querySelector("span");
+        const spanText = span.innerText;
+        const newToDo = document.createElement("input");
+        newToDo.value= spanText;
+        span.before(newToDo);
+        li.removeChild(span); 
+        //li.appendChild(newToDo);
+    } else {
+        btn.innerText = "수정";
+        const input = li.querySelector("input");
+        const inputText = input.value;
+        const spanText = document.createElement("span")
+        spanText.innerText = inputText;
+        input.before(spanText);
+        li.removeChild(input);
+        //li.appendChild(spanText);
+        for (let i= 0; i< toDos.length; i++) {
+            if(toDos[i].id==li.id){
+                toDos[i].text = inputText;
+            }
+        }
+        saveToDos();
+    }
+}
+
+
 function deleteToDo(event){
     const btn = event.target;
     const li = btn.parentNode;
@@ -30,11 +63,15 @@ function paintToDo(text){
     const delBtn = document.createElement("button");
     delBtn.innerText = "X";
     delBtn.addEventListener("click",deleteToDo);
+    const updateBtn = document.createElement("button");
+    updateBtn.innerText = "수정";
+    updateBtn.addEventListener("click", updateToDo);
     const span = document.createElement("span");
     const newId = toDos.length +1;
     span.innerText = text;
     li.appendChild(span);
     li.appendChild(delBtn);
+    li.appendChild(updateBtn);
     li.id = newId;
     toDoList.appendChild(li);
     const toDoObj = {
